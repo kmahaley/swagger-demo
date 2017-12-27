@@ -1,11 +1,14 @@
 package com.learn.service;
 
+import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Supplier;
 
 import com.learn.model.Person;
 import com.learn.model.PersonId;
 import com.learn.model.PersonService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,9 +23,31 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/services")
 public class PersonServiceImpl implements PersonService {
 
+    @Autowired
+    JavaGenericsServiceImpl genericsService;
+
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @Override
     public Person get(@PathVariable("id") PersonId id) {
+//        genericsService.genericMethodForBox();
+//        genericsService.genericMethodForMovie();
+//        genericsService.inspect(20.22);
+        Supplier<String> supplier = () -> "apple";
+        System.out.println("------->   "+supplier.get().charAt(3));
+
+        System.out.println("------->   "+supplier.get().charAt(4));
+
+        // initial a Map
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("1", "Jan");
+        map.put("2", "Feb");
+        map.put("3", "Mar");
+        map.put("4", "Apr");
+        map.put("5", "May");
+        map.put("6", "Jun");
+
+
+
         return new Person(id, "GET", null, null, 20, null);
     }
 
