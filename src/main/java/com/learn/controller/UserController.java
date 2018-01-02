@@ -1,4 +1,4 @@
-package com.learn.service;
+package com.learn.controller;
 
 import java.util.Arrays;
 import java.util.List;
@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/user")
 @Api(value="User resource", description="Operations pertaining to user resource")
-public class UserResource {
+public class UserController {
 
     @ApiOperation(value = "View a list of available users", response = List.class)
     @ApiResponses(value = {
@@ -46,7 +46,10 @@ public class UserResource {
 
     @PutMapping("/put")
     @ResponseBody
-    public String userPut(@RequestBody final String id){
-        return id;
+    public Object userPut(@RequestBody final Object stringStringHashMap){
+//        final HashMap<String, Object> stringStringHashMap = new HashMap<>(map);
+        System.out.println(stringStringHashMap.toString());
+        return stringStringHashMap;
+
     }
 }
