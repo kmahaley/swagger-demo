@@ -19,4 +19,6 @@ public interface PersonService {
     Person update(PersonId id, Person person);
 
     void delete(PersonId id);
+
+    Person getString(Person p);
 }

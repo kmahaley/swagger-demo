@@ -1,36 +1,31 @@
-package com.learn.config;
+package com.learn.service.impl;/*
+ *-----------------------------------------------------------------------------
+ * Copyright 2017 NCR Corporation
+ *-----------------------------------------------------------------------------
+ */
 
 import com.learn.properties.ApplicationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import springfox.documentation.builders.PathSelectors;
-import springfox.documentation.builders.RequestHandlerSelectors;
+import org.springframework.stereotype.Service;
 import springfox.documentation.service.ApiInfo;
 import springfox.documentation.service.Contact;
-import springfox.documentation.spi.DocumentationType;
-import springfox.documentation.spring.web.plugins.Docket;
-import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 /**
+ * Application properties service which demos how to inject configuration properties and use it
+ *
  * @author km185223
  */
-@EnableSwagger2
-@Configuration
+@Service
 @EnableConfigurationProperties(ApplicationProperties.class)
-public class SwaggerConfig {
+public class ApplicationPropertiesServiceImpl {
 
-    @Bean
-    public Docket swaggerDocServiceApi(ApplicationProperties applicationProperties) {
-        return new Docket(DocumentationType.SWAGGER_2)
-                .select()
-                .apis(RequestHandlerSelectors.basePackage("com.learn"))
-                .paths(PathSelectors.any())
-                .build()
-                .apiInfo(getMetaData(applicationProperties));
+    private final ApplicationProperties applicationProperties;
+
+    public ApplicationPropertiesServiceImpl(ApplicationProperties applicationProperties) {
+        this.applicationProperties = applicationProperties;
     }
 
-    private ApiInfo getMetaData(ApplicationProperties applicationProperties) {
+    public ApiInfo getMetaData() {
         System.out.println(applicationProperties);
 
         ApiInfo apiInfo = new ApiInfo(

@@ -1,4 +1,4 @@
-package com.learn.service;
+package com.learn.service.impl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -6,8 +6,8 @@ import java.util.List;
 
 import com.learn.math.impl.DoubleMathClass;
 import com.learn.math.impl.IntegerMathClass;
-import com.learn.model.Box;
-import com.learn.model.Movie;
+import com.learn.model.generics.Box;
+import com.learn.model.generics.Movie;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,12 +19,15 @@ import org.springframework.stereotype.Service;
 @Service
 public class JavaGenericsServiceImpl {
 
-    @Autowired
     private DoubleMathClass doubleMathClass;
 
-    @Autowired
     private IntegerMathClass integerMathClass;
 
+    @Autowired
+    public JavaGenericsServiceImpl(DoubleMathClass doubleMathClass, IntegerMathClass integerMathClass) {
+        this.doubleMathClass = doubleMathClass;
+        this.integerMathClass = integerMathClass;
+    }
 
     public void genericMethodForBox() {
         final Box<String> stringBox = new Box<>();

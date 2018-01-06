@@ -1,12 +1,15 @@
 package com.learn.controller;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import com.learn.model.Person;
 import com.learn.model.PersonId;
-import com.learn.service.JavaGenericsServiceImpl;
+import com.learn.service.impl.JavaGenericsServiceImpl;
 import com.learn.service.PersonService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +27,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/services")
 public class PersonController implements PersonService {
 
-    @Autowired
     JavaGenericsServiceImpl genericsService;
+
+    @Autowired
+    public PersonController(JavaGenericsServiceImpl genericsService) {
+        this.genericsService = genericsService;
+    }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @Override
@@ -47,8 +54,14 @@ public class PersonController implements PersonService {
         map.put("5", "May");
         map.put("6", "Jun");
 
-
-
+        List<Person> persons = Arrays.asList(new Person(id, "GET", null, null, 40, null),
+                new Person(id, "GET", null, null, 50, null),
+                new Person(id, "GET", null, null, 305, null),
+                new Person(id, "GET", null, null, 202, null));
+        final Double collect = persons
+                .stream()
+                .collect(Collectors.averagingInt(p -> p.getAge()));
+        System.out.println(collect);
         return new Person(id, "GET", null, null, 20, null);
     }
 
@@ -74,5 +87,12 @@ public class PersonController implements PersonService {
     @Override
     public void delete(@PathVariable("id") PersonId id) {
         log.info("deleted : " + id.getId());
+    }
+
+    @RequestMapping(value = "/person", method = RequestMethod.POST)
+    @Override
+    public Person getString(@RequestBody Person person) {
+        log.info("/person : " + person);
+        return person;
     }
 }
