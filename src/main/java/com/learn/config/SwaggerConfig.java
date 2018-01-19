@@ -31,9 +31,9 @@ public class SwaggerConfig {
     }
 
     private ApiInfo getMetaData(ApplicationProperties applicationProperties) {
-        System.out.println(applicationProperties);
+//        System.out.println(applicationProperties);
 
-        ApiInfo apiInfo = new ApiInfo(
+        return new ApiInfo(
                 applicationProperties.getName(),
                 applicationProperties.getDescription(),
                 applicationProperties.getVersion(),
@@ -43,6 +43,5 @@ public class SwaggerConfig {
                         applicationProperties.getContactEmail()),
                 applicationProperties.getLicenseName(),
                 applicationProperties.getLicenseUrl());
-        return apiInfo;
     }
 }

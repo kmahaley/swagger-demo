@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.learn.exception.CustomTestException;
 import com.learn.math.impl.DoubleMathClass;
 import com.learn.math.impl.IntegerMathClass;
 import com.learn.model.generics.Box;
@@ -23,10 +24,15 @@ public class JavaGenericsServiceImpl {
 
     private IntegerMathClass integerMathClass;
 
+    private ApplicationPropertiesServiceImpl propertiesService;
+
     @Autowired
-    public JavaGenericsServiceImpl(DoubleMathClass doubleMathClass, IntegerMathClass integerMathClass) {
+    public JavaGenericsServiceImpl(
+            DoubleMathClass doubleMathClass, IntegerMathClass integerMathClass,
+            ApplicationPropertiesServiceImpl propertiesService) {
         this.doubleMathClass = doubleMathClass;
         this.integerMathClass = integerMathClass;
+        this.propertiesService = propertiesService;
     }
 
     public void genericMethodForBox() {
@@ -76,11 +82,23 @@ public class JavaGenericsServiceImpl {
         integerMathClass.division(a, b);
         integerMathClass.square(a);
 
-        final double d =20.2000;
-        final double c =40.4000;
-        doubleMathClass.add(c,d);
-        doubleMathClass.division(c,d);
+        final double d = 20.2000;
+        final double c = 40.4000;
+        doubleMathClass.add(c, d);
+        doubleMathClass.division(c, d);
         doubleMathClass.squareRoot(c);
     }
 
+    public String whichMethodException(String str) throws CustomTestException {
+        final String methodName = " \n2) JavaGenericsServiceImpl.whichMethodException ";
+        try {
+            propertiesService.getExceptionMethod(str);
+        } catch (CustomTestException ex) {
+            log.info("Step of the exception : 2");
+            log.info("Method name : JavaGenericsServiceImpl.whichMethodException, CustomTestException");
+            ex.toString();
+            throw ex;
+        }
+        return str;
+    }
 }

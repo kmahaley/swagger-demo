@@ -4,13 +4,15 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import com.learn.model.Person;
 import com.learn.model.PersonId;
-import com.learn.service.impl.JavaGenericsServiceImpl;
 import com.learn.service.PersonService;
+import com.learn.service.impl.JavaGenericsServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -37,7 +39,7 @@ public class PersonController implements PersonService {
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @Override
     public Person get(@PathVariable("id") PersonId id) {
-//        genericsService.genericMethodForBox();
+        genericsService.genericMethodForBox();
 //        genericsService.genericMethodForMovie();
 //        genericsService.inspect(20.22);
         Supplier<String> supplier = () -> "apple";
@@ -87,6 +89,9 @@ public class PersonController implements PersonService {
     @Override
     public void delete(@PathVariable("id") PersonId id) {
         log.info("deleted : " + id.getId());
+        Optional<String> val = Stream.of("one", "two").findFirst();
+
+        System.out.println(val.get());
     }
 
     @RequestMapping(value = "/person", method = RequestMethod.POST)

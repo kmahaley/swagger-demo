@@ -4,7 +4,10 @@ package com.learn.service.impl;/*
  *-----------------------------------------------------------------------------
  */
 
+import com.learn.exception.CustomTestException;
 import com.learn.properties.ApplicationProperties;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.stereotype.Service;
 import springfox.documentation.service.ApiInfo;
@@ -15,6 +18,7 @@ import springfox.documentation.service.Contact;
  *
  * @author km185223
  */
+@Slf4j
 @Service
 @EnableConfigurationProperties(ApplicationProperties.class)
 public class ApplicationPropertiesServiceImpl {
@@ -33,11 +37,23 @@ public class ApplicationPropertiesServiceImpl {
                 applicationProperties.getDescription(),
                 applicationProperties.getVersion(),
                 applicationProperties.getTermsOfService(),
-                new Contact(applicationProperties.getContactName(),
+                new Contact(
+                        applicationProperties.getContactName(),
                         applicationProperties.getContactUrl(),
                         applicationProperties.getContactEmail()),
                 applicationProperties.getLicenseName(),
                 applicationProperties.getLicenseUrl());
+        log.info(String.format("Properties of the application are %s", apiInfo));
         return apiInfo;
+    }
+
+    public String getExceptionMethod(String str) throws CustomTestException {
+        final String methodName = "1) ApplicationPropertiesServiceImpl.getExceptionMethod";
+        if (StringUtils.equals(str, "exception")) {
+            log.info("Step of the exception : 1");
+            log.info("Method name : ApplicationPropertiesServiceImpl.getExceptionMethod");
+            throw new CustomTestException(String.format("Custom resource exception for : %s", methodName +"\t" +str+"\n"));
+        }
+        return str;
     }
 }
