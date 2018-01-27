@@ -18,7 +18,7 @@ public interface PersonService {
 
     Person update(PersonId id, Person person);
 
-    void delete(PersonId id);
+    void delete(PersonId id) throws Exception;
 
     Person getString(Person p);
 }

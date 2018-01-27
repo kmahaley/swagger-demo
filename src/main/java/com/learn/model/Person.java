@@ -2,6 +2,7 @@ package com.learn.model;
 
 import java.io.Serializable;
 
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,6 +14,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Person implements Serializable {
+    @JsonUnwrapped
     private PersonId personId;
 
     private String name;

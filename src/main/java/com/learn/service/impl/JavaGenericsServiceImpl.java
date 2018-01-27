@@ -90,13 +90,12 @@ public class JavaGenericsServiceImpl {
     }
 
     public String whichMethodException(String str) throws CustomTestException {
-        final String methodName = " \n2) JavaGenericsServiceImpl.whichMethodException ";
+        final String methodName = "2) JavaGenericsServiceImpl.whichMethodException ";
         try {
             propertiesService.getExceptionMethod(str);
         } catch (CustomTestException ex) {
             log.info("Step of the exception : 2");
-            log.info("Method name : JavaGenericsServiceImpl.whichMethodException, CustomTestException");
-            ex.toString();
+            log.info(String.format("Method name : %s", methodName));
             throw ex;
         }
         return str;

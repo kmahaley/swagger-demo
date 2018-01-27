@@ -50,9 +50,10 @@ public class ApplicationPropertiesServiceImpl {
     public String getExceptionMethod(String str) throws CustomTestException {
         final String methodName = "1) ApplicationPropertiesServiceImpl.getExceptionMethod";
         if (StringUtils.equals(str, "exception")) {
-            log.info("Step of the exception : 1");
-            log.info("Method name : ApplicationPropertiesServiceImpl.getExceptionMethod");
-            throw new CustomTestException(String.format("Custom resource exception for : %s", methodName +"\t" +str+"\n"));
+            log.info(String.format("Method name : %s", methodName));
+            throw new CustomTestException(String.format(
+                    "Custom resource exception for : %s",
+                    methodName + "\t" + str + "\n"));
         }
         return str;
     }

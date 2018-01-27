@@ -4,10 +4,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
-import java.util.function.Supplier;
+import java.util.function.BiFunction;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import com.learn.model.Person;
 import com.learn.model.PersonId;
@@ -39,13 +37,12 @@ public class PersonController implements PersonService {
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @Override
     public Person get(@PathVariable("id") PersonId id) {
-        genericsService.genericMethodForBox();
+//        genericsService.genericMethodForBox();
 //        genericsService.genericMethodForMovie();
 //        genericsService.inspect(20.22);
-        Supplier<String> supplier = () -> "apple";
-        System.out.println("------->   "+supplier.get().charAt(3));
-
-        System.out.println("------->   "+supplier.get().charAt(4));
+//        Supplier<String> supplier = () -> "apple";
+//        System.out.println("------->   "+supplier.get().charAt(3));
+//        System.out.println("------->   "+supplier.get().charAt(4));
 
         // initial a Map
         Map<String, String> map = new HashMap<String, String>();
@@ -56,14 +53,36 @@ public class PersonController implements PersonService {
         map.put("5", "May");
         map.put("6", "Jun");
 
-        List<Person> persons = Arrays.asList(new Person(id, "GET", null, null, 40, null),
-                new Person(id, "GET", null, null, 50, null),
-                new Person(id, "GET", null, null, 305, null),
-                new Person(id, "GET", null, null, 202, null));
-        final Double collect = persons
+        List<Person> persons = Arrays.asList(
+                new Person(id, "John", null, null, 40, null),
+                new Person(id, "John", null, null, 50, null),
+                new Person(id, "mario", null, null, 305, null),
+                new Person(id, "merry", null, null, 202, null));
+        final Double average = persons
                 .stream()
                 .collect(Collectors.averagingInt(p -> p.getAge()));
-        System.out.println(collect);
+        System.out.println("Average : " + average);
+
+        List<String> mappingByFunction = persons
+                .stream()
+                .collect(Collectors.mapping((s -> s.getName()), Collectors.toList()));
+        System.out.println("Mapping : " + mappingByFunction);
+
+        Map<String, Integer> stringIntegerMap = persons
+                .stream()
+                .collect(Collectors.groupingBy(p -> p.getName(), Collectors.summingInt(p -> p.getAge())));
+        System.out.println("Group by : " + stringIntegerMap);
+
+        Map<String, List<Integer>> mapName = persons
+                .stream()
+                .collect(Collectors.groupingBy(
+                        Person::getName,
+                        Collectors.mapping(Person::getAge, Collectors.toList())));
+        System.out.println("mapName : " + mapName);
+
+        BiFunction<Double, Double, String> function = (a, b) -> "apple " + (a.intValue() + b.intValue());
+        final String apply = function.apply(2.0, 3.0);
+
         return new Person(id, "GET", null, null, 20, null);
     }
 
@@ -87,11 +106,9 @@ public class PersonController implements PersonService {
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     @Override
-    public void delete(@PathVariable("id") PersonId id) {
+    public void delete(@PathVariable("id") PersonId id) throws Exception {
         log.info("deleted : " + id.getId());
-        Optional<String> val = Stream.of("one", "two").findFirst();
-
-        System.out.println(val.get());
+        genericsService.whichMethodException("exception");
     }
 
     @RequestMapping(value = "/person", method = RequestMethod.POST)
