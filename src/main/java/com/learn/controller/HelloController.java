@@ -25,11 +25,30 @@ public class HelloController {
         this.calculatorService = calculatorService;
     }
 
-    @GetMapping("/{var1}/{var2}")
-    public int helloGet(@PathVariable("var1") int var1, int var2) {
+    @GetMapping("/add/{var1}/{var2}")
+    public int add(@PathVariable("var1") int var1, @PathVariable("var2") int var2) {
         final String methodName = " \n3) HelloController.helloGet ";
-        return calculatorService.add(var1,var2);
+        return calculatorService.add(var1, var2);
     }
+
+    @GetMapping("/substract/{var1}/{var2}")
+    public int subtract(@PathVariable("var1") int var1, @PathVariable("var2") int var2) {
+        final String methodName = " \n3) HelloController.helloGet ";
+        return calculatorService.subtract(var1, var2);
+    }
+
+    @GetMapping("/multiply/{var1}/{var2}")
+    public int multiply(@PathVariable("var1") int var1, @PathVariable("var2") int var2) {
+        final String methodName = " \n3) HelloController.helloGet ";
+        return calculatorService.multiply(var1, var2);
+    }
+
+    @GetMapping("/divide/{var1}/{var2}")
+    public int divide(@PathVariable("var1") int var1, @PathVariable("var2") int var2) {
+        final String methodName = " \n3) HelloController.helloGet ";
+        return calculatorService.divide(var1, var2);
+    }
+
 
     @PostMapping("/post")
     public String helloPost(@RequestBody final String id) {
