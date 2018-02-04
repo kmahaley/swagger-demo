@@ -1,12 +1,16 @@
 package com.learn.controller;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiFunction;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
+import com.learn.model.Address;
+import com.learn.model.Gender;
+import com.learn.model.ManifestData;
+import com.learn.model.PackageData;
 import com.learn.model.Person;
 import com.learn.model.PersonId;
 import com.learn.service.PersonService;
@@ -24,7 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @Slf4j
 @RestController
-@RequestMapping("/services")
+@RequestMapping("/persons")
 public class PersonController implements PersonService {
 
     JavaGenericsServiceImpl genericsService;
@@ -44,44 +48,98 @@ public class PersonController implements PersonService {
 //        System.out.println("------->   "+supplier.get().charAt(3));
 //        System.out.println("------->   "+supplier.get().charAt(4));
 
-        // initial a Map
-        Map<String, String> map = new HashMap<String, String>();
-        map.put("1", "Jan");
-        map.put("2", "Feb");
-        map.put("3", "Mar");
-        map.put("4", "Apr");
-        map.put("5", "May");
-        map.put("6", "Jun");
+        List<Address> addresses = getAddesses();
 
         List<Person> persons = Arrays.asList(
-                new Person(id, "John", null, null, 40, null),
-                new Person(id, "John", null, null, 50, null),
-                new Person(id, "mario", null, null, 305, null),
-                new Person(id, "merry", null, null, 202, null));
+                new Person(id, "John", addresses.get(0), getManifestData(), 40, Gender.MALE),
+                new Person(id, "John", addresses.get(1), null, 50, Gender.MALE),
+                new Person(id, "mario", addresses.get(2), null, 305, Gender.FEMALE),
+                new Person(id, "merry", addresses.get(3), getManifestData(), 202, Gender.FEMALE),
+                new Person(id, "merry", addresses.get(4), null, 202, Gender.FEMALE));
+
         final Double average = persons
                 .stream()
                 .collect(Collectors.averagingInt(p -> p.getAge()));
-        System.out.println("Average : " + average);
+        System.out.println("Collectors.averagingInt : " + average);
+
+        final Long no = persons
+                .stream()
+                .collect(Collectors.counting());
+        System.out.println("No of elements : " + no);
 
         List<String> mappingByFunction = persons
                 .stream()
                 .collect(Collectors.mapping((s -> s.getName()), Collectors.toList()));
-        System.out.println("Mapping : " + mappingByFunction);
+        System.out.println("Collectors.mapping : " + mappingByFunction);
 
-        Map<String, Integer> stringIntegerMap = persons
+        final Map<String, List<Person>> personNameList = persons
+                .stream()
+                .collect(Collectors.groupingBy(p -> p.getName()));
+        System.out.println("Collectors.groupingBy : " + personNameList);
+
+        Map<String, Integer> personNameByAge = persons
                 .stream()
                 .collect(Collectors.groupingBy(p -> p.getName(), Collectors.summingInt(p -> p.getAge())));
-        System.out.println("Group by : " + stringIntegerMap);
+        System.out.println("Collectors.groupingBy sum of age : " + personNameByAge);
 
-        Map<String, List<Integer>> mapName = persons
+        Map<String, List<Integer>> personNameByAgeList = persons
                 .stream()
                 .collect(Collectors.groupingBy(
                         Person::getName,
                         Collectors.mapping(Person::getAge, Collectors.toList())));
-        System.out.println("mapName : " + mapName);
+        System.out.println("personNameByAgeList : " + personNameByAgeList);
 
         BiFunction<Double, Double, String> function = (a, b) -> "apple " + (a.intValue() + b.intValue());
         final String apply = function.apply(2.0, 3.0);
+
+        final String CollectAndThen = persons
+                .stream()
+                .collect(Collectors.collectingAndThen(Collectors.summingInt(p -> p
+                        .getAddress()
+                        .getZip()), var -> "Zip " + var));
+        System.out.println("CollectAndThen : " + CollectAndThen);
+
+        final Double totalWeight = persons
+                .stream()
+                .flatMap(p -> {
+                    if (p.getManifest() != null) {
+                        return p
+                                .getManifest()
+                                .getPackages()
+                                .stream();
+                    }
+                    return Stream.empty();
+                })
+                .collect(Collectors.summingDouble(packageData -> packageData.getWeight()));
+        System.out.println("totalWeight : " + totalWeight);
+
+        final Map<String, List<PackageData>> mapOfPackageName = persons
+                .stream()
+                .flatMap(p -> {
+                    if (p.getManifest() != null) {
+                        return p
+                                .getManifest()
+                                .getPackages()
+                                .stream();
+                    }
+                    return Stream.empty();
+                })
+                .collect(Collectors.groupingBy(pd -> pd.getName()));
+        System.out.println("mapOfPackageName : " + mapOfPackageName);
+
+        final Map<String, Double> mapOfPackageWeight = persons
+                .stream()
+                .flatMap(p -> {
+                    if (p.getManifest() != null) {
+                        return p
+                                .getManifest()
+                                .getPackages()
+                                .stream();
+                    }
+                    return Stream.empty();
+                })
+                .collect(Collectors.groupingBy(pd -> pd.getName(), Collectors.summingDouble(pd -> pd.getWeight())));
+        System.out.println("mapOfPackageWeight : " + mapOfPackageWeight);
 
         return new Person(id, "GET", null, null, 20, null);
     }
@@ -116,5 +174,25 @@ public class PersonController implements PersonService {
     public Person getString(@RequestBody Person person) {
         log.info("/person : " + person);
         return person;
+    }
+
+    private static ManifestData getManifestData() {
+        PackageData package1 = new PackageData("TV", 222.0, 30.0, true);
+        PackageData package2 = new PackageData("radio", 20.0, 10.0, true);
+        PackageData package3 = new PackageData("fridge", 500.0, 50.0, false);
+        ManifestData manifestData = new ManifestData();
+        manifestData.setCurrencyCode("USD");
+        manifestData.setTotalValue("10000");
+        manifestData.setPackages(Arrays.asList(package1, package2, package3));
+        return manifestData;
+    }
+
+    public List<Address> getAddesses() {
+        Address address1 = new Address("street1", "city1", "state1", 00001, "country1");
+        Address address2 = new Address("street2", "city2", "state2", 00002, "country2");
+        Address address3 = new Address("street3", "city3", "state3", 00003, "country3");
+        Address address4 = new Address("street4", "city4", "state4", 00004, "country4");
+        Address address5 = new Address("street5", "city5", "state5", 00005, "country5");
+        return Arrays.asList(address1, address2, address3, address4, address5);
     }
 }

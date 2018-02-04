@@ -18,6 +18,13 @@ import static org.mockito.Mockito.*;
  */
 public class ControllerUnitTest {
 
+    /**
+     * In unit test you can create instance of the service
+     *
+     * CalculatorService mockCalculatorService = new CalculatorServiceImpl();
+     *
+     * OR use mock for calculatorService
+     */
     @Mock
     private CalculatorService mockCalculatorService;
 

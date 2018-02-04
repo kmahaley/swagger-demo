@@ -47,9 +47,8 @@ public class UserController {
     @PutMapping("/put")
     @ResponseBody
     public Object userPut(@RequestBody final Object stringStringHashMap){
-//        final HashMap<String, Object> stringStringHashMap = new HashMap<>(map);
-        System.out.println(stringStringHashMap.toString());
-        return stringStringHashMap;
 
+
+        return stringStringHashMap;
     }
 }
