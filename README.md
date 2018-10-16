@@ -1,2 +1,4 @@
 # swagger-demo
-sample rest template project without any functionality
+- Shows how to use swagger with spring rest controllers
+- Use of test framework like mockito
+- Use of streams 
