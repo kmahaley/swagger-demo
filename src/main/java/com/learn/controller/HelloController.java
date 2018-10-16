@@ -1,6 +1,7 @@
 package com.learn.controller;
 
 import com.learn.service.CalculatorService;
+import com.learn.service.impl.KartikList;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -52,6 +53,14 @@ public class HelloController {
 
     @PostMapping("/post")
     public String helloPost(@RequestBody final String id) {
+        KartikList kartikList = new KartikList(10);
+        System.out.println(kartikList.apple());
+        kartikList.addme(10);
+        kartikList.addme(20);
+        kartikList.addme(40);
+        kartikList.addme(30);
+
+        kartikList.printMe();
         return id;
     }
 
